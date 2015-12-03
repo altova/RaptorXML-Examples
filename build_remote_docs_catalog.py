@@ -1,11 +1,11 @@
 # Copyright 2015 Altova GmbH
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
-#	  http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ from altova import xml, xsd, xbrl
 # This script downloads all remote parts of the schema as a whole / discoverable taxonomy set.
 # The target directory for the downloaded documents can be specified with the script-param target.
 # If no target is specified the documents are stored in the subfolder /output in job.output_dir.
-# If any document was downloaded, a catalog containing uri mappings for each downloaded 
+# If any document was downloaded, a catalog containing uri mappings for each downloaded
 # document is created. It is stored in the target directory and called catalog.xml.
 #
 # Example: raptorxml xsd --script=build_remote_docs_catalog.py http://www.w3.org/MarkUp/Forms/2007/XForms-11-Schema.xsd
@@ -28,8 +28,8 @@ from altova import xml, xsd, xbrl
 
 # string templates for catalog ####################################################################
 g_CatalogTemplate = """<?xml version='1.0' encoding='UTF-8'?>
-<catalog xmlns='urn:oasis:names:tc:entity:xmlns:xml:catalog' 
-         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+<catalog xmlns='urn:oasis:names:tc:entity:xmlns:xml:catalog'
+         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
          xsi:schemaLocation='urn:oasis:names:tc:entity:xmlns:xml:catalog Catalog.xsd'
 >
   %(mappings)s
@@ -86,7 +86,7 @@ def download_docs( docs, targetDir ):
             downloadDoc( doc.uri, targetFileName )
     if uriMappings:
         createCatalog( uriMappings, createUniqueFileName( targetDir, urllib.parse.urlparse( "catalog.xml" ) ) )
-        
+
 
 def download_dts( dts, targetDir ):
     if dts is None:
@@ -104,7 +104,7 @@ def download_schema( schema, targetDir ):
 
 def getTargetDir( job ):
     return os.path.abspath( os.path.join( job.output_dir, job.script_params.get( "target", "./output" ) ) )
-        
+
 
 # Entry Points ####################################################################################
 
@@ -112,7 +112,7 @@ def getTargetDir( job ):
 def on_xsd_finished( job, schema ):
     download_schema( schema, getTargetDir( job ) )
 
-    
+
 # Entry Point for valxml-withxsd (xsi)
 def on_xsi_finished( job, instance ):
     if instance is None:
@@ -120,7 +120,7 @@ def on_xsi_finished( job, instance ):
     else:
         download_schema( instance.schema, getTargetDir( job ) )
 
-        
+
 # Entry Point for valxbrltaxonomy (dts)
 def on_dts_finished( job, dts ):
     if dts is None:
@@ -128,7 +128,7 @@ def on_dts_finished( job, dts ):
     else:
         download_dts( dts, getTargetDir( job ) )
 
-    
+
 # Entry Point for valxbrl (xbrl)
 def on_xbrl_finished( job, instance ):
     if instance is None:
