@@ -33,6 +33,9 @@ Demonstrates how to supply additional parameters to RaptorXML Python API v2 scri
 ##### write_to_file.py
 Example how to generate additional output files from a Python API v2 script.
 
+##### xbrl_testsuite.py
+Executes the XBRL 2.1 conformance test suite.
+
 ##### xml_traversal.py
 Demonstrates how to navigate through an XML Infoset tree.
 
