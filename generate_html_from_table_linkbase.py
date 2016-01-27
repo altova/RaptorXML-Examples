@@ -1,11 +1,11 @@
 # Copyright 2015 Altova GmbH
-#
+# 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-#
+# 
 #     http://www.apache.org/licenses/LICENSE-2.0
-#
+# 
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,14 +52,14 @@ def html_head():
 <meta charset="utf-8"/>
 <style type="text/css">
 .error { color: red }
-table { border-collapse:collapse; border: 0.22em solid black; background-color: white; color: black;}
-td, th { border-left: 0.1em solid black; border-left: 0.1em solid black; border-top: 0.1em solid black; padding: 0.5em; text-align: center; }
-thead tr th.rollup { border-top-style: none; }
-tbody tr th.rollup { border-left-style: none; }
-tbody tr:nth-of-type(even) { background-color: #EAEFFF; }
-thead, tbody tr th { background-color: #C6D8FF; }
-thead { border-bottom: 0.19em solid black; }
-thead tr:first-of-type th:first-of-type, tbody tr th:last-of-type { border-right: 0.18em solid black; }
+table { border-collapse:collapse; border: 0.22em solid black; background-color: white; color: black;} 
+td, th { border-left: 0.1em solid black; border-left: 0.1em solid black; border-top: 0.1em solid black; padding: 0.5em; text-align: center; } 
+thead tr th.rollup { border-top-style: none; } 
+tbody tr th.rollup { border-left-style: none; } 
+tbody tr:nth-of-type(even) { background-color: #EAEFFF; } 
+thead, tbody tr th { background-color: #C6D8FF; } 
+thead { border-bottom: 0.19em solid black; } 
+thead tr:first-of-type th:first-of-type, tbody tr th:last-of-type { border-right: 0.18em solid black; } 
 </style>
 </head>
 """
@@ -107,13 +107,13 @@ def concept_label(concept, preferred_label=None, lang=None):
         return labels[0].text
     else:
         return str(concept.qname)
-
+    
 def generate_label(html, header, lang=None):
     labels = list(header.structural_node.definition_node.labels(lang=lang))
     if len(labels):
         html.append('<p class="label">%s</p>\n' % labels[0].text)
         return
-
+        
     tagged_cs = header.structural_node.constraint_sets
     if len(tagged_cs) == 1:
         cs = next(iter(tagged_cs.values()))
@@ -168,6 +168,18 @@ def generate_label(html, header, lang=None):
                 else:
                     html.append('<p class="label">Absent</p>\n')
 
+def generate_cell_data(html, facts, lang=None):
+    for fact in facts:
+        if fact.xsi_nil:
+            value = 'N/A'
+        elif fact.concept.is_enum():
+            value = concept_label(fact.enum_value,None,lang)
+        elif fact.concept.is_numeric():
+            value = str(fact.effective_numeric_value)
+        else:
+            value = fact.normalized_value
+        html.append('<p class="fact">%s</p>\n' % value)
+                    
 def generate_table_caption(html, table, z, lang=None):
     html.append('<caption>\n')
     for header in table.axis(Z).slice(z):
@@ -176,7 +188,7 @@ def generate_table_caption(html, table, z, lang=None):
     if len(labels):
         html.append('<p class="label">%s</p>\n' % labels[0].text)
     html.append('</caption>\n')
-
+                    
 def generate_table_head(html, table, lang=None):
     x_axis = table.axis(X)
 
@@ -193,7 +205,7 @@ def generate_table_head(html, table, lang=None):
                 html.append('<th class="rollup" colspan="%d">\n' % header.span)
             else:
                 html.append('<th colspan="%d">\n' % header.span)
-            generate_label(html,header,lang)
+                generate_label(html,header,lang)
             html.append('</th>\n')
         html.append('</tr>\n')
     html.append('</thead>\n')
@@ -213,24 +225,23 @@ def generate_table_body(html, table, y_range, z, lang=None):
                     html.append('<th rowspan="%d" class="rollup">\n' % header.span)
                 else:
                     html.append('<th rowspan="%d">\n' % header.span)
-                generate_label(html,header,lang)
+                    generate_label(html,header,lang)
                 html.append('</th>\n')
         # Data cells with fact values
         for x in range(table.axis(X).slice_count):
             html.append('<td>\n')
-            for fact in table.cell(x,y,z).facts:
-                html.append('<p class="fact">%s</p>\n' % fact.normalized_value)
+            generate_cell_data(html, table.cell(x,y,z).facts, lang)
             html.append('</td>\n')
         html.append('</tr>\n')
     html.append('</tbody>\n')
-
+    
 def generate_table(job, instance, deftable, params):
     single_output_file = job.script_params.get('single-output','true') == 'true'
     lang = job.script_params.get('lang',None)
     max_rows = int(job.script_params.get('max-rows','10000'))
 
     body = []
-
+    
     # Create layout model for the given definition table
     print('Calculating table layout for table "%s"...' % deftable.id)
     (tableset, errorlog) = deftable.generate_layout_model(instance, **params)
@@ -248,7 +259,7 @@ def generate_table(job, instance, deftable, params):
             if not table.is_empty():
                 for z in range(table.axis(Z).slice_count):
                     for y in range(0, table.axis(Y).slice_count, max_rows):
-                        body.append('<table>\n')
+                        body.append('<table>\n')    
                         generate_table_caption(body, table, z, lang)
                         generate_table_head(body, table, lang)
                         generate_table_body(body, table, range(y,min(y+max_rows, table.axis(Y).slice_count)), z, lang)
@@ -262,7 +273,7 @@ def generate_table(job, instance, deftable, params):
                     write_html(job,deftable.id+'.html', body)
                     body = []
             table_idx += 1
-
+            
     return body
 
 def generate_tables(job, instance):
