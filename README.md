@@ -1,6 +1,9 @@
 # RaptorXML-Examples
 Examples for using the [Python v2.1 API](http://manual.altova.com/RaptorXML/pyapiv2/html/) of [RaptorXML+XBRL Server](http://www.altova.com/raptorxml.html).
 
+**NOTE:** *The examples for other language bindings are located in sub-folders.*
+
+## Python examples
 Each script includes a short documentation and a sample invocation command line at the top a.
 
 ##### build_remote_docs_catalog.py
