@@ -4,7 +4,7 @@ Examples for using the [C# API](http://manual.altova.com/RaptorXML/dotnetapiv2/h
 
 ### Load-Validate  
 
-These example console applications demonstrate how to load an XBRL instance, check for validation errors and perform one small additional feature for demonstration purposes.
+These example console applications show how to load an XBRL instance, check for validation errors and perform one small additional feature for demonstration purposes.
 
 ##### CalculationLinkbaseTraversal
 * traverse the calculation linkbase arcs
