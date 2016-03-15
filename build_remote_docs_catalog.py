@@ -15,7 +15,7 @@ __copyright__ = "Copyright 2015 Altova GmbH"
 __license__ = 'http://www.apache.org/licenses/LICENSE-2.0'
 
 import os, urllib.request, urllib.parse
-from altova import xml, xsd, xbrl
+from altova import xml, xsd
 
 # This script downloads all remote parts of the schema as a whole / discoverable taxonomy set.
 # The target directory for the downloaded documents can be specified with the script-param target.
