@@ -1,4 +1,4 @@
-# Copyright 2015 Altova GmbH
+# Copyright 2015, 2016 Altova GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-__copyright__ = "Copyright 2015 Altova GmbH"
+__copyright__ = "Copyright 2015, 2016 Altova GmbH"
 __license__ = 'http://www.apache.org/licenses/LICENSE-2.0'
 
 # This RaptorXML Python API v2 script demonstrates how to generate additional output files.
 #
 # Example invocation:
-#   raptorxml valxml-withxsd --streaming=false --script=write_to_file.py ExpReport.xml
+# raptorxml valxml-withxsd --streaming=false --script=write_to_file.py
+# ExpReport.xml
 
-import builtins, os
+import builtins
+import os
 from altova import *
+
 
 def write_to_file(job, instance):
     # Create a new file in the job output directory
@@ -31,17 +34,24 @@ def write_to_file(job, instance):
 
         # instance object will be None if XML validation was not successful
         if instance:
-            f.write('The root element is <'+instance.document_element.local_name+'>')
+            f.write('The root element is <' +
+                    instance.document_element.local_name + '>')
         else:
             f.write('XML instance is not valid')
 
     # Register new output file with RaptorXML engine
     job.append_output_filename(filepath)
 
-# This entry point will be called by RaptorXML after the XML instance validation job (valxml-withxsd) has finished
+# This entry point will be called by RaptorXML after the XML instance
+# validation job (valxml-withxsd) has finished
+
+
 def on_xsi_finished(job, instance):
     write_to_file(job, instance)
 
-# Main entry point, will be called by RaptorXML after the XBRL instance validation job has finished
+# Main entry point, will be called by RaptorXML after the XBRL instance
+# validation job has finished
+
+
 def on_xbrl_finished(job, instance):
     write_to_file(job, instance)
