@@ -45,7 +45,7 @@ Demonstrates how to navigate through an XML Infoset tree.
 ##### xml_as_html.py
 Example how to convert XML documents to simple HTML.
 
-#### xml_pretty_print.py
+##### xml_pretty_print.py
 Simple pretty printer for XML documents.
 
-For more information on the Python v2.1 API, please refer to this [documentation](http://manual.altova.com/RaptorXML/pyapiv2/html/).
+For more information on the Python v2.4 API, please refer to this [documentation](http://manual.altova.com/RaptorXML/pyapiv2/html/).
