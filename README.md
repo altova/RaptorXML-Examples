@@ -1,5 +1,5 @@
 # RaptorXML-Examples
-Examples for using the [Python v2.1 API](http://manual.altova.com/RaptorXML/pyapiv2/html/) of [RaptorXML+XBRL Server](http://www.altova.com/raptorxml.html).
+Examples for using the [Python v2.4 API](http://manual.altova.com/RaptorXML/pyapiv2/html/) of [RaptorXML+XBRL Server](http://www.altova.com/raptorxml.html).
 
 **NOTE:** *The examples for other language bindings are located in sub-folders.*
 
@@ -41,5 +41,11 @@ Executes the XBRL 2.1 conformance test suite.
 
 ##### xml_traversal.py
 Demonstrates how to navigate through an XML Infoset tree.
+
+##### xml_as_html.py
+Example how to convert XML documents to simple HTML.
+
+#### xml_pretty_print.py
+Simple pretty printer for XML documents.
 
 For more information on the Python v2.1 API, please refer to this [documentation](http://manual.altova.com/RaptorXML/pyapiv2/html/).
