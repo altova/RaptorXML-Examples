@@ -52,10 +52,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="raptorxmlxbrlapi, Version=2.5.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Projects\trunk\reference\os\win\build32\bin\raptorxmlxbrlapi.dll</HintPath>
-    </Reference>
+    <Reference Include="raptorxmlxbrlapi, Version=2.5.0.0, Culture=neutral" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
