@@ -4,10 +4,22 @@ namespace XbrlTablesToExcel
 {
     class DefaultTableStyle : ITableStyle
     {
-        public IXLRange ApplyTOCFormat(IXLRange range, int depth, bool isLeaf)
+        public IXLRange ApplyTOCFormat(IXLRange range, int depth, bool isTable, bool isReported)
         {
             range.DataType = XLDataType.Text;
-            if (!isLeaf)
+            if (isTable)
+            {
+                if (isReported)
+                {
+                    range.Style.Font.Bold = depth == 0;
+                    range.Style.Font.Underline = XLFontUnderlineValues.Single;
+                }
+                else
+                {
+                    range.Style.Font.FontColor = XLColor.LightGray;
+                }
+            }
+            else
             {
                 range.Style.Font.Bold = depth == 0;
                 range.Style.Font.Underline = XLFontUnderlineValues.Single;

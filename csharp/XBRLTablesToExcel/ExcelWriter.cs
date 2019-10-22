@@ -434,37 +434,58 @@ namespace XbrlTablesToExcel
             Logger.Debug("Writing Report Info worksheet");
 
             var ws = wb.AddWorksheet("Report Info");
-            ws.Column(xOffset + 1).Width = 21;
-            ws.Column(xOffset + 2).Width = 41;
+            ws.Column(xOffset + 1).Width = 2;
+            ws.Column(xOffset + 2).Width = 21;
+            ws.Column(xOffset + 3).Width = 41;
 
-            Style.ApplyTitleFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2)).Value = "Report Info";
+            Style.ApplyTitleFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 3)).Value = "Report Info";
             yOffset += EmptyRowsAfterTitle + 1;
 
-            ws.Range(yOffset + 1, xOffset + 2, yOffset + 6, xOffset + 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            int yOffsetStart = yOffset + 1;
 
-            Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Entry Point";
-            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), DataCellType.Text).Value = report.EntryPointName;
+            Style.ApplyHeaderFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2).Merge(), HeaderType.Other).Value = "Entry Point";
+            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Text).Value = report.EntryPointName;
             ++yOffset;
 
-            Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Entry Point URL";
-            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), DataCellType.Text).Value = report.EntryPointUrl;
+            Style.ApplyHeaderFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2).Merge(), HeaderType.Other).Value = "Entry Point URL";
+            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Text).Value = report.EntryPointUrl;
             ++yOffset;
 
-            Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Entity Identifier";
-            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), DataCellType.Text).Value = report.ReportingEntityIdentifier;
+            Style.ApplyHeaderFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2).Merge(), HeaderType.Other).Value = "Entity Identifier";
+            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Text).Value = report.ReportingEntityIdentifier;
             ++yOffset;
 
-            Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Entity Scheme";
-            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), DataCellType.Text).Value = report.ReportingEntityScheme;
+            Style.ApplyHeaderFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2).Merge(), HeaderType.Other).Value = "Entity Scheme";
+            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Text).Value = report.ReportingEntityScheme;
             ++yOffset;
 
-            Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Reporting Currency";
-            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), DataCellType.Text).Value = report.ReportingCurrency;
+            Style.ApplyHeaderFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2).Merge(), HeaderType.Other).Value = "Reporting Currency";
+            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Text).Value = report.ReportingCurrency;
             ++yOffset;
 
-            Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Reference Date";
-            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), DataCellType.Date).Value = report.ReferenceDate;
+            Style.ApplyHeaderFormat(ws.Range(yOffset + 1, xOffset + 1, yOffset + 1, xOffset + 2).Merge(), HeaderType.Other).Value = "Reference Date";
+            Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Date).Value = report.ReferenceDate;
             ++yOffset;
+
+            if (report.FilingIndicators.Count > 0)
+            {
+                ws.Cell(yOffset, xOffset + 3).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                
+                Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 1).AsRange(), HeaderType.Other).Value = "Filing Indicators";
+                ws.Range(yOffset + 1, xOffset + 1, yOffset + report.FilingIndicators.Count, xOffset + 1).Merge();
+                ws.Range(yOffset + 1, xOffset + 1, yOffset + report.FilingIndicators.Count, xOffset + 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                ws.Cell(yOffset + 1, xOffset + 1).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                ws.Cell(yOffset + 1, xOffset + 1).Style.Alignment.TextRotation = 90;
+
+                foreach (var code in report.FilingIndicators.Keys.OrderBy(x => x))
+                {
+                    Style.ApplyHeaderFormat(ws.Cell(yOffset + 1, xOffset + 2).AsRange(), HeaderType.Other).Value = code;
+                    Style.ApplyDataCellFormat(ws.Cell(yOffset + 1, xOffset + 3).AsRange(), DataCellType.Boolean).Value = report.FilingIndicators[code];
+                    ++yOffset;
+                }
+            }
+
+            ws.Range(yOffsetStart, xOffset + 3, yOffset, xOffset + 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
             return ws;
         }
@@ -481,7 +502,7 @@ namespace XbrlTablesToExcel
             yOffset += EmptyRowsAfterTitle + 1;
 
             var cell = ws.Cell(yOffset + 1, xOffset + 1);
-            Style.ApplyTOCFormat(cell.AsRange(), 0, true).Value = "Report Info";
+            Style.ApplyTOCFormat(cell.AsRange(), 0, false, true).Value = "Report Info";
             cell.Hyperlink = new XLHyperlink(WriteReportInfo(report, wb, XOffset, YOffset).Cell(YOffset + 1, XOffset + 1));
             ++yOffset;
 
@@ -490,9 +511,9 @@ namespace XbrlTablesToExcel
             foreach (var tableTreeLine in report.GetTableTree())
             {
                 cell = ws.Cell(yOffset + 1, xOffset + tableTreeLine.Depth + 1);
-                Style.ApplyTOCFormat(cell.AsRange(), tableTreeLine.Depth, tableTreeLine.Table != null).Value = tableTreeLine.Title;
+                Style.ApplyTOCFormat(cell.AsRange(), tableTreeLine.Depth, tableTreeLine.IsTable, tableTreeLine.IsReported).Value = tableTreeLine.Title;
 
-                if (tableTreeLine.Table != null)
+                if (tableTreeLine.IsReported)
                 {
                     var sheetName = CreateSheetName(tableTreeLine.Table, worksheetNames);
                     var wsTable = wb.AddWorksheet(sheetName);

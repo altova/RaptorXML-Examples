@@ -11,11 +11,11 @@ namespace XbrlTablesToExcel
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public string Url { get { return Instance.Uri; } }
-        public Xbrl.Instance Instance { get; set; }
+        public Xbrl.Instance Instance { get; private set; }
         public Xbrl.Taxonomy.Dts Dts { get { return Instance.Dts;  } }
-        public Xbrl.Table.Layout.TableModel TableModel { get; set; }
-        public Xbrl.Context ReportingContext { get; set; }
-        public string ReportingCurrency { get; set; }
+        public Xbrl.Table.Layout.TableModel TableModel { get; private set; }
+        public Xbrl.Context ReportingContext { get; private set; }
+        public string ReportingCurrency { get; private set; }
         public string ReportingEntityIdentifier { get { return ReportingContext?.Entity.Identifier.Value; } }
         public string ReportingEntityScheme { get { return ReportingContext?.Entity.Identifier.Scheme; } }
         public DateTime? ReferenceDate
@@ -46,6 +46,16 @@ namespace XbrlTablesToExcel
             }
         }
         public string EntryPointUrl { get { return this.Instance.SchemaRefs.First().XlinkHref; } }
+        public Dictionary<string, bool> FilingIndicators { get; private set; }
+
+        public bool GetFilingIndicator(string filingIndicator)
+        {
+            if (FilingIndicators.Count == 0)
+                return true;
+            if (FilingIndicators.TryGetValue(filingIndicator, out bool value))
+                return value;
+            return false;
+        }
 
         public Report(string url, Xbrl.Taxonomy.Dts dts=null)
         {
@@ -115,6 +125,8 @@ namespace XbrlTablesToExcel
                 if (mostUsedCurrency.Value > 0)
                     this.ReportingCurrency = mostUsedCurrency.Key;
             }
+
+            FilingIndicators = XbrlUtils.FilingIndicators(Instance);
         }
     }
 }

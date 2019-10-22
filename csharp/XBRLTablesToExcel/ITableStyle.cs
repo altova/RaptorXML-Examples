@@ -25,7 +25,7 @@ namespace XbrlTablesToExcel
 
     interface ITableStyle
     {
-        IXLRange ApplyTOCFormat(IXLRange range, int depth, bool isLeaf);
+        IXLRange ApplyTOCFormat(IXLRange range, int depth, bool isTable, bool isReported);
         IXLRange ApplyTitleFormat(IXLRange range);
         IXLRange ApplyTitleHeaderFormat(IXLRange range);
         IXLRange ApplyHeaderFormat(IXLRange range, HeaderType axis, bool bIsOpenAspect = false);

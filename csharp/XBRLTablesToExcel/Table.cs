@@ -13,6 +13,7 @@ namespace XbrlTablesToExcel
         public Xbrl.Table.Table DefinitionTable => LayoutTable.DefinitionTable;
         public string Title => XbrlUtils.GetVerboseLabel(DefinitionTable);
         public string RcCode => XbrlUtils.GetRCCode(DefinitionTable);
+        public string FilingIndicator => XbrlUtils.GetFilingIndicatorCode(DefinitionTable);
 
         public List<Xbrl.Table.AspectNode> OpenAspects;
         public bool HasOpenAspects => OpenAspects.Count > 0;
@@ -24,6 +25,8 @@ namespace XbrlTablesToExcel
         public Xbrl.Table.Layout.Axis XAxis => LayoutTable.GetAxis(Xbrl.Table.AxisType.X);
         public Xbrl.Table.Layout.Axis YAxis => LayoutTable.GetAxis(Xbrl.Table.AxisType.Y);
         public Xbrl.Table.Layout.Axis ZAxis => LayoutTable.GetAxis(Xbrl.Table.AxisType.Z);
+
+        public bool IsReported => Report.GetFilingIndicator(FilingIndicator);
 
 
         public Table(Report report, Xbrl.Table.Layout.Table table, uint zSlice = 0)

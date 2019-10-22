@@ -130,7 +130,7 @@ namespace XbrlTablesToExcel
                 label = GetLabel(axis.GetDefinitionBreakdown((uint)row), false);
             return label;
         }
-        internal static string GetFilingIndicatorCodeForTable(Xbrl.Table.Table table)
+        internal static string GetFilingIndicatorCode(Xbrl.Table.Table table)
         {
             var label = table.GetLabels("http://www.eurofiling.info/xbrl/role/filing-indicator-code", null, null).FirstOrDefault();
             return label == null ? null : label.Text;
@@ -154,7 +154,7 @@ namespace XbrlTablesToExcel
                 return rcCode;
 
             // Workaround for SRB entry point
-            string filingIndicator = GetFilingIndicatorCodeForTable(table);
+            string filingIndicator = GetFilingIndicatorCode(table);
             string label = GetLabel(table);
             return String.Format("{0} - {1}", filingIndicator, label);
         }
@@ -176,19 +176,17 @@ namespace XbrlTablesToExcel
             options.PreserveEmptyAspectNodes = true;
             return options;
         }
-        internal static SortedSet<string> FilingIndicators(Xbrl.Instance instance)
+        internal static Dictionary<string, bool> FilingIndicators(Xbrl.Instance instance)
         {
             var qnameFiled = new Xml.QName("filed", FilingIndicatorsNamespace);
             var conceptFilingIndicator = instance.Dts.ResolveConcept("filingIndicator", FilingIndicatorsNamespace) as Xbrl.Taxonomy.Item;
-            var setFilingIndicators = new SortedSet<string>();
+            var filingIndicators = new Dictionary<string, bool>();
             foreach (var fi in instance.Facts.Filter(conceptFilingIndicator, null, null))
             {
-                var elem = fi.Element;
-                var filedAttr = elem.FindAttribute(qnameFiled);
-                if (filedAttr == null || filedAttr.SchemaActualValue as Xsd.Boolean == true)
-                    setFilingIndicators.Add(elem.SchemaNormalizedValue);
+                var filedAttr = fi.Element.FindAttribute(qnameFiled);
+                filingIndicators.Add(fi.Element.SchemaNormalizedValue, filedAttr == null || filedAttr.SchemaActualValue as Xsd.Boolean == true);
             }
-            return setFilingIndicators;
+            return filingIndicators;
         }
         static internal bool IsPercentItem(Xbrl.Taxonomy.Dts dts, Xbrl.Taxonomy.Item item)
         {

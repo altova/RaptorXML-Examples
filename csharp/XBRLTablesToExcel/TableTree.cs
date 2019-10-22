@@ -18,6 +18,10 @@ namespace XbrlTablesToExcel
         public Table Table;
         public string Title;
         public int Depth;
+
+        public bool IsGroup => Table == null;
+        public bool IsTable => Table != null;
+        public bool IsReported => Table?.IsReported ?? false;
     }
 
     public class TableTree : IEnumerable<TableTreeLine>
@@ -73,7 +77,7 @@ namespace XbrlTablesToExcel
                 foreach (var table in XbrlUtils.FindTableSet(report.TableModel, defTable))
                 {
                     var tableInfo = new Table(report, table);
-                    if (table.GetAxis(Xbrl.Table.AxisType.Z).RowCount > 1 || XbrlUtils.HasOpenAspectNodes(table.GetAxis(Xbrl.Table.AxisType.Z)))
+                    if (table.GetAxis(Xbrl.Table.AxisType.Z).SliceCount > 1 || XbrlUtils.HasOpenAspectNodes(table.GetAxis(Xbrl.Table.AxisType.Z)))
                     {
                         Lines.Add(new TableTreeLine(null, tableInfo.Title, depth));
                         for (uint z = 0; z < table.Shape.Z; ++z)
