@@ -173,7 +173,9 @@ namespace XbrlTablesToExcel
         {
             var options = new Xbrl.Table.TableLayoutSettings();
             options.TableElimination = false;
-            options.PreserveEmptyAspectNodes = true;
+            options.PreserveEmptyAspectNodes = false;
+            options.TableEliminationAspectNodes = true;
+
             return options;
         }
         internal static Dictionary<string, bool> FilingIndicators(Xbrl.Instance instance)

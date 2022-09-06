@@ -567,6 +567,7 @@ namespace XbrlTablesToExcel
                     case '/':
                     case '?':
                     case '*':
+                    case ':':
                         break;
                     default:
                         if (nParanCount == 0)
@@ -633,7 +634,7 @@ namespace XbrlTablesToExcel
                         label = XbrlUtils.GetLabel(header);
                 }
                 if (label != null)
-                    suffixes.Add(label);
+                    suffixes.Add(System.Text.RegularExpressions.Regex.Replace(label, @"[/\\?*:[\]]", ""));
             }
             return suffixes;
         }
