@@ -18,13 +18,14 @@ __license__ = 'http://www.apache.org/licenses/LICENSE-2.0'
 #
 # This script supports the following script parameters:
 #
-#   Parameter               Type
+#   Parameter                 Type
 #   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#   single-output           boolean         Specify true to generate either one large HTML file containing all the tables or false to generate a separate HTML file per XBRL table resource.
-#   max-rows                integer         Specify the maximum number of rows for a single HTML table. Tables that exceed the maximum number of rows are generated as multiple HTML tables with the same header.
-#   lang                    string          Specify the label language.
-#   elimination             boolean         Specify true to perform empty table row/column elimination (avoids generation empty HTML table rows/columns).
-#   parameters              JSON            Specify any required XBRL formula linkbase parameters (see http://manual.altova.com/RaptorXML/raptorxmlxbrlserver/rxadditional_formulaparams_formats.htm for more information).
+#   single-output             boolean         Specify true to generate either one large HTML file containing all the tables or false to generate a separate HTML file per XBRL table resource.
+#   max-rows                  integer         Specify the maximum number of rows for a single HTML table. Tables that exceed the maximum number of rows are generated as multiple HTML tables with the same header.
+#   lang                      string          Specify the label language.
+#   elimination               boolean         Specify true to perform empty table row/column elimination (avoids generation empty HTML table rows/columns).
+#   elimination_aspect_nodes  boolean         Specify true to perform empty table row/column elimination (avoids generation empty HTML table rows/columns) for rows/columns that only contain aspect nodes.
+#   parameters                JSON            Specify any required XBRL formula linkbase parameters (see http://manual.altova.com/RaptorXML/raptorxmlxbrlserver/rxadditional_formulaparams_formats.htm for more information).
 #
 # Example invocation:
 # raptorxmlxbrl valxbrl --script=generate_html_from_table_linkbase.py
@@ -192,6 +193,8 @@ def generate_cell_data(html, facts, lang=None):
         for fact in facts:
             if fact.xsi_nil:
                 value = 'N/A'
+            elif isinstance(fact.concept, xbrl.taxonomy.Tuple):
+                value = fact.concept.name
             elif fact.concept.is_enum():
                 value = concept_label(fact.enum_value, None, lang)
             elif fact.concept.is_numeric():
@@ -344,7 +347,8 @@ def generate_tables(job, instance):
         'single-output', 'true') == 'true'
     params = {
         'formula_parameters': json.loads(job.script_params.get('parameters', 'null')),
-        'table_elimination': json.loads(job.script_params.get('elimination', 'true'))
+        'table_elimination': json.loads(job.script_params.get('elimination','true')),
+        'xbrl.table_eliminate_empty_aspectnode_rows_cols': json.loads(job.script_params.get('elimination_aspect_nodes','true'))
     }
 
     # Generate HTML output file for each definition table in the table linkbase
