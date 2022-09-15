@@ -75,7 +75,11 @@ namespace XbrlTablesToExcel
                 {
                     var aspect = (header.DefinitionNode as Xbrl.Table.AspectNode).ParticipatingAspect;
                     var val = constraints[aspect];
-                    if (val.Aspect.Type == Xbrl.AspectType.Dimension)
+                    if (val == null)
+                    {
+                        label = string.Format("{0} null", label);
+                    }
+                    else if (val.Aspect.Type == Xbrl.AspectType.Dimension)
                     {
                         if (val.Aspect.Dimension.IsExplicit)
                             label = XbrlUtils.GetLabel((val as Xbrl.ExplicitDimensionAspectValue).Value);

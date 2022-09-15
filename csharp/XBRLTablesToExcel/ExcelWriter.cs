@@ -84,10 +84,10 @@ namespace XbrlTablesToExcel
                 {
                     // Write open header columns
                     var range = ws.Range(yOffset + 1, xOffset + x + 1, yOffset + shapeY, xOffset + x + 1);
-                    Style.ApplyHeaderFormat(range, HeaderType.XAxis, true).Value = XbrlUtils.GetOpenAspectHeaderLabel(table.YAxis, table.OpenAspects[x], x);
+                    Style.ApplyHeaderFormat(range, HeaderType.XAxis, true).Value = XbrlUtils.GetOpenAspectHeaderLabel(table, table.OpenAspects[x]);
 
                     // Write open header RC codes
-                    string rcCode = XbrlUtils.GetOpenAspectRCCode(table.YAxis, table.OpenAspects[x], x);
+                    string rcCode = XbrlUtils.GetOpenAspectRCCode(table, table.OpenAspects[x]);
                     range = ws.Cell(yOffset + shapeY + 1, xOffset + x + 1).AsRange();
                     Style.ApplyHeaderRcCodeFormat(range, HeaderType.XAxis, true).Value = rcCode ?? (10 * (x + 1)).ToString();
                 }
@@ -118,7 +118,7 @@ namespace XbrlTablesToExcel
                     {
                         string value = null;
                         if (header.DefinitionNode is Xbrl.Table.AspectNode)
-                            value = XbrlUtils.GetOpenAspectHeaderLabel(axis, header.DefinitionNode as Xbrl.Table.AspectNode, y);
+                            value = XbrlUtils.GetOpenAspectHeaderLabel(table, header.DefinitionNode as Xbrl.Table.AspectNode);
                         else
                             value = XbrlUtils.GetHeaderLabel(axis, header, y);
 

@@ -94,6 +94,35 @@ namespace XbrlTablesToExcel
                 return null;
             return labels.First().Text;
         }
+
+        internal static Xbrl.Table.Breakdown GetOpenAspectDefinitionBreakdown(Table table, Xbrl.Table.AspectNode openAspectNode)
+        {
+            var breakdownTreeNetwork = table.Dts.GetNetworkOfRelationships(
+                table.DefinitionTable.ExtendedLink.QName,
+                table.DefinitionTable.ExtendedLink.XlinkRole,
+                new Xml.QName("breakdownTreeArc", "http://xbrl.org/2014/table"),
+                "http://xbrl.org/arcrole/2014/breakdown-tree"
+                );
+            var tableBreakdownNetwork = table.Dts.GetNetworkOfRelationships(
+                table.DefinitionTable.ExtendedLink.QName,
+                table.DefinitionTable.ExtendedLink.XlinkRole,
+                new Xml.QName("tableBreakdownArc", "http://xbrl.org/2014/table"),
+                "http://xbrl.org/arcrole/2014/table-breakdown"
+                );
+            if (breakdownTreeNetwork != null && tableBreakdownNetwork != null)
+            {
+                foreach (var breakdownTreeRel in breakdownTreeNetwork.GetRelationshipsTo(openAspectNode))
+                {
+                    foreach (var tableBreakdownRel in tableBreakdownNetwork.GetRelationshipsTo(breakdownTreeRel.SourceResource))
+                    {
+                        if (tableBreakdownRel.SourceResource == table.DefinitionTable)
+                            return breakdownTreeRel.SourceResource as Xbrl.Table.Breakdown;
+                    }
+                }
+            }
+            return null;
+        }
+
         internal static string GetOpenAspectHeaderLabel(Xbrl.Table.Layout.Axis axis, Xbrl.Table.AspectNode openAspectNode, int row)
         {
             string openAspectLabel = GetLabel(openAspectNode, false);
@@ -115,11 +144,49 @@ namespace XbrlTablesToExcel
                 openAspectLabel = openAspectNode.Id;
             return openAspectLabel;
         }
+
+        internal static string GetOpenAspectHeaderLabel(Table table, Xbrl.Table.AspectNode openAspectNode)
+        {
+            string openAspectLabel = GetLabel(openAspectNode, false);
+            if (openAspectLabel == null)
+            {
+                // Use breakdown label if the aspect node is the only child                
+                var breakdown = GetOpenAspectDefinitionBreakdown(table, openAspectNode);
+                if (breakdown != null && breakdown.TreeRelationships.Count == 1)
+                    openAspectLabel = GetLabel(breakdown, false);
+            }
+            if (openAspectLabel == null)
+            {
+                var aspect = openAspectNode.ParticipatingAspects.FirstOrDefault();
+                if (aspect != null)
+                    openAspectLabel = GetLabel(aspect.Dimension, true);
+            }
+            // Fallback to the id
+            if (openAspectLabel == null)
+                openAspectLabel = openAspectNode.Id;
+            return openAspectLabel;
+        }
+
         internal static string GetOpenAspectRCCode(Xbrl.Table.Layout.Axis axis, Xbrl.Table.AspectNode openAspectNode, int row)
         {
             string openAspectRC = GetRCCode(openAspectNode);
             if (openAspectRC == null)
-                openAspectRC = GetRCCode(axis.GetDefinitionBreakdown((uint)row));
+            {
+                var breakdown = axis.GetDefinitionBreakdown((uint)row);
+                openAspectRC = GetRCCode(breakdown);
+            }
+            return openAspectRC;
+        }
+
+        internal static string GetOpenAspectRCCode(Table table, Xbrl.Table.AspectNode openAspectNode)
+        {
+            string openAspectRC = GetRCCode(openAspectNode);
+            if (openAspectRC == null)
+            {
+                var breakdown = GetOpenAspectDefinitionBreakdown(table, openAspectNode);
+                if (breakdown != null)
+                    openAspectRC = GetRCCode(breakdown);
+            }
             return openAspectRC;
         }
 
