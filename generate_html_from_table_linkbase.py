@@ -357,7 +357,7 @@ def generate_table(job, instance, deftable, params):
     (tableset, errorlog) = deftable.generate_layout_model(instance, **params)
     if errorlog.has_errors():
         # Catch any errors during table resolution and layout process
-        body.append('<p class="error">%s</p>\n' % error.text.replace('\n','</br>') for error in errorlog.errors)
+        body.extend('<p class="error">%s</p>\n' % error.text.replace('\n','</br>') for error in errorlog.errors)
         if not single_output_file:
             write_html(job,deftable.id+'.html', body)
             body = []
