@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>XbrlTablesToExcel</RootNamespace>
     <AssemblyName>XbrlTablesToExcel</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -75,10 +75,9 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>packages\NLog.4.6.7\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="raptorxmlxbrlapi, Version=2.7.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="raptorxmlxbrlapi, Version=2.9.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Altova\RaptorXMLXBRLServer2020\bin\raptorxmlxbrlapi.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>C:\Program Files\Altova\RaptorXMLXBRLServer2024\bin\raptorxmlxbrlapi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

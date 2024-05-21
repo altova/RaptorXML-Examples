@@ -89,7 +89,7 @@ namespace XbrlTablesToExcel
                             }
                         }
                     }
-                    else if (table.ContainsFacts)
+                    else if (table.ContainsFacts || tableInfo.IsReported)
                     {
                         Lines.Add(new TableTreeLine(tableInfo, tableInfo.Title, depth));
                     }

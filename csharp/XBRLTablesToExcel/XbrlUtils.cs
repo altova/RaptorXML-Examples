@@ -240,7 +240,7 @@ namespace XbrlTablesToExcel
         {
             var options = new Xbrl.Table.TableLayoutSettings();
             options.TableElimination = false;
-            options.PreserveEmptyAspectNodes = false;
+            options.PreserveEmptyAspectNodes = true;
             options.TableEliminationAspectNodes = true;
 
             return options;

@@ -378,6 +378,7 @@ namespace XbrlTablesToExcel
             int row = 0;
             for (int y = 0; y < table.RowCount; ++y)
             {
+                bool emptyOpenAspects = false;
                 if (table.OpenAspectCount > 0)
                 {
                     if (table.IsRowEmpty(y))
@@ -387,14 +388,21 @@ namespace XbrlTablesToExcel
                     for (int x = 0; x < table.OpenAspectCount; ++x)
                     {
                         var cell = ws.Cell(yOffset + row + 1, xOffset + x + 1).AsRange();
-                        WriteTableDataCell(table.Dts, constraints[table.OpenAspects[x].ParticipatingAspect], cell);
+                        var val = constraints[table.OpenAspects[x].ParticipatingAspect];
+                        if (val != null)
+                            WriteTableDataCell(table.Dts, val, cell);
+                        else
+                            emptyOpenAspects = true;
                     }
                 }
 
-                for (int x = 0; x < table.ColCount; ++x)
+                if (!emptyOpenAspects)
                 {
-                    var cell = ws.Cell(yOffset + row + 1, xOffset + table.OpenAspectCount + x + 1).AsRange();
-                    WriteTableDataCell(table.Dts, table.GetCell(x, y), cell);
+                    for (int x = 0; x < table.ColCount; ++x)
+                    {
+                        var cell = ws.Cell(yOffset + row + 1, xOffset + table.OpenAspectCount + x + 1).AsRange();
+                        WriteTableDataCell(table.Dts, table.GetCell(x, y), cell);
+                    }
                 }
 
                 ++row;
