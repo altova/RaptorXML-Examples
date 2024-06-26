@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>x64</Platforms>
+    <StartupObject>GettingStartedWithVariables.Program</StartupObject>
+    <BaseOutputPath>..\build</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XPathApiUtils\XPathApiUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="raptorxmlxbrlapi">
+      <HintPath>C:\Program Files\Altova\RaptorXMLXBRLServer2024\bin\raptorxmlxbrlapi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
