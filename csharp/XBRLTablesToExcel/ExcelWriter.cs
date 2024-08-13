@@ -340,15 +340,18 @@ namespace XbrlTablesToExcel
         }
         void WriteTableDataCell(Xbrl.Taxonomy.Dts dts, Xbrl.AspectValue val, IXLRange range)
         {
-            if (val.Aspect.Type == Xbrl.AspectType.Dimension)
+            if (val != null)
             {
-                if (val is Xbrl.ExplicitDimensionAspectValue)
-                    WriteTableDataCell(dts, (val as Xbrl.ExplicitDimensionAspectValue).Value, range);
+                if (val.Aspect.Type == Xbrl.AspectType.Dimension)
+                {
+                    if (val is Xbrl.ExplicitDimensionAspectValue)
+                        WriteTableDataCell(dts, (val as Xbrl.ExplicitDimensionAspectValue).Value, range);
+                    else
+                        WriteTableDataCell(dts, (val as Xbrl.TypedDimensionAspectValue).Value, range);
+                }
                 else
-                    WriteTableDataCell(dts, (val as Xbrl.TypedDimensionAspectValue).Value, range);
+                    throw new NotImplementedException(string.Format("Formatting of {0} aspect values not supported", val.Aspect.Type));
             }
-            else
-                throw new NotImplementedException(string.Format("Formatting of {0} aspect values not supported", val.Aspect.Type));
         }
         void WriteTableDataCell(Xbrl.Taxonomy.Dts dts, Xbrl.Table.Layout.Cell cell, IXLRange range)
         {
@@ -630,7 +633,10 @@ namespace XbrlTablesToExcel
                                 label = (constraints[aspect] as Xbrl.ExplicitDimensionAspectValue).Value.Name;
                         }
                         else
-                            label = (constraints[aspect] as Xbrl.TypedDimensionAspectValue).Value.SchemaNormalizedValue;
+                        {
+                            var typedDimAspect = (constraints[aspect] as Xbrl.TypedDimensionAspectValue);
+                            label = typedDimAspect != null ? typedDimAspect.Value.SchemaNormalizedValue : null;
+                        }
                     }
                     else
                         label = constraints[aspect].ToString();
