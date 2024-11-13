@@ -17,7 +17,7 @@ Examples for using the [C# API](https://www.altova.com/manual/en/raptorapi/dotne
 #### InitialContextXmlDocument
 * an example demonstrating how to load an XML file and select nodes using the path expressions and how to work with namespaces.
 
-#### ExternalFunction1
+#### ExternalFunction
 * an example demonstrating how to use the ExternalFunctions mechanism to provide external extension function(s) with native callback invocation based on specialization(s) of XPath.ExternalFunctionObject(s).
 
 #### TraceMsg
