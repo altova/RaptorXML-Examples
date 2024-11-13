@@ -48,4 +48,7 @@ Example how to convert XML documents to simple HTML.
 ##### xml_pretty_print.py
 Simple pretty printer for XML documents.
 
+##### xpath_xquery_xslt_py
+Demonstrates the XPath, XQuery, XSLT engine usage in python environment.
+
 For more information on the Python v2.4 API, please refer to this [documentation](http://manual.altova.com/RaptorXML/pyapiv2/html/).
