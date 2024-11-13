@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted", "GettingStarted\GettingStarted.csproj", "{48CEDD97-D8BD-4951-B892-2552011C448A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExternalVariables", "ExternalVariables\ExternalVariables.csproj", "{3ABB6200-9EA2-4038-9BB0-5A80668F8130}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitialContextXmlDocument", "InitialContextXmlDocument\InitialContextXmlDocument.csproj", "{AA8D96D9-C6D1-4334-A5BA-222E7DDBE84C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamespacePrefixes", "NamespacePrefixes\NamespacePrefixes.csproj", "{BBE7F30C-880E-4685-B2CF-5626348E8B3F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitialContextItem", "InitialContextItem\InitialContextItem.csproj", "{C706E1D4-24CF-4B13-9969-7B04D32BF124}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraceMsg", "TraceMsg\TraceMsg.csproj", "{EFB43655-75AF-4F60-892C-9361355CC52D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExternalFunction", "ExternalFunction\ExternalFunction.csproj", "{D60E522D-1CF6-465B-A50F-321FDAEA5DD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48CEDD97-D8BD-4951-B892-2552011C448A}.Debug|x64.ActiveCfg = Debug|x64
+		{48CEDD97-D8BD-4951-B892-2552011C448A}.Debug|x64.Build.0 = Debug|x64
+		{48CEDD97-D8BD-4951-B892-2552011C448A}.Release|x64.ActiveCfg = Release|x64
+		{48CEDD97-D8BD-4951-B892-2552011C448A}.Release|x64.Build.0 = Release|x64
+		{3ABB6200-9EA2-4038-9BB0-5A80668F8130}.Debug|x64.ActiveCfg = Debug|x64
+		{3ABB6200-9EA2-4038-9BB0-5A80668F8130}.Debug|x64.Build.0 = Debug|x64
+		{3ABB6200-9EA2-4038-9BB0-5A80668F8130}.Release|x64.ActiveCfg = Release|x64
+		{3ABB6200-9EA2-4038-9BB0-5A80668F8130}.Release|x64.Build.0 = Release|x64
+		{AA8D96D9-C6D1-4334-A5BA-222E7DDBE84C}.Debug|x64.ActiveCfg = Debug|x64
+		{AA8D96D9-C6D1-4334-A5BA-222E7DDBE84C}.Debug|x64.Build.0 = Debug|x64
+		{AA8D96D9-C6D1-4334-A5BA-222E7DDBE84C}.Release|x64.ActiveCfg = Release|x64
+		{AA8D96D9-C6D1-4334-A5BA-222E7DDBE84C}.Release|x64.Build.0 = Release|x64
+		{BBE7F30C-880E-4685-B2CF-5626348E8B3F}.Debug|x64.ActiveCfg = Debug|x64
+		{BBE7F30C-880E-4685-B2CF-5626348E8B3F}.Debug|x64.Build.0 = Debug|x64
+		{BBE7F30C-880E-4685-B2CF-5626348E8B3F}.Release|x64.ActiveCfg = Release|x64
+		{BBE7F30C-880E-4685-B2CF-5626348E8B3F}.Release|x64.Build.0 = Release|x64
+		{C706E1D4-24CF-4B13-9969-7B04D32BF124}.Debug|x64.ActiveCfg = Debug|x64
+		{C706E1D4-24CF-4B13-9969-7B04D32BF124}.Debug|x64.Build.0 = Debug|x64
+		{C706E1D4-24CF-4B13-9969-7B04D32BF124}.Release|x64.ActiveCfg = Release|x64
+		{C706E1D4-24CF-4B13-9969-7B04D32BF124}.Release|x64.Build.0 = Release|x64
+		{EFB43655-75AF-4F60-892C-9361355CC52D}.Debug|x64.ActiveCfg = Debug|x64
+		{EFB43655-75AF-4F60-892C-9361355CC52D}.Debug|x64.Build.0 = Debug|x64
+		{EFB43655-75AF-4F60-892C-9361355CC52D}.Release|x64.ActiveCfg = Release|x64
+		{EFB43655-75AF-4F60-892C-9361355CC52D}.Release|x64.Build.0 = Release|x64
+		{D60E522D-1CF6-465B-A50F-321FDAEA5DD4}.Debug|x64.ActiveCfg = Debug|x64
+		{D60E522D-1CF6-465B-A50F-321FDAEA5DD4}.Debug|x64.Build.0 = Debug|x64
+		{D60E522D-1CF6-465B-A50F-321FDAEA5DD4}.Release|x64.ActiveCfg = Release|x64
+		{D60E522D-1CF6-465B-A50F-321FDAEA5DD4}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FA61CCEE-1D9A-47EE-93FC-F412FA8FD74A}
+	EndGlobalSection
+EndGlobal

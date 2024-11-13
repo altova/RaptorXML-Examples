@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Platforms>x64;</Platforms>
+    <StartupObject>XPathApiExamples.NamespacePrefixes</StartupObject>
+    <BaseOutputPath>..\..\build</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GettingStarted\GettingStarted.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="raptorxmlxbrlapi">
+      <HintPath>C:\Program Files\Altova\RaptorXMLXBRLServer2025\bin\raptorxmlxbrlapi.dll</HintPath>
+      <!--HintPath>C:\projects\trunk\reference\os\win\build64\bin\raptorxmlxbrlapi.dll</HintPath-->
+    </Reference>
+  </ItemGroup>
+
+</Project>
