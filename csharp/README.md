@@ -34,3 +34,6 @@ These example console applications show how to load an XBRL instance, check for 
 
 ##### PresentationLinkbaseTraversal
 * traverse the presentation linkbase arcs
+
+##### XPathXQueryXslt
+* Introductory examples for the XPath, XQuery and XSLT engine usage via the C# API
