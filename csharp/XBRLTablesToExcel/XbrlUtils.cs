@@ -247,6 +247,7 @@ namespace XbrlTablesToExcel
         }
         internal static Dictionary<string, bool> FilingIndicators(Xbrl.Instance instance)
         {
+            // Note: This only checks for tuple-based filing indicators. General filing indicator support will be added to Xbrl.Instance.
             var qnameFiled = new Xml.QName("filed", FilingIndicatorsNamespace);
             var conceptFilingIndicator = instance.Dts.ResolveConcept("filingIndicator", FilingIndicatorsNamespace) as Xbrl.Taxonomy.Item;
             var filingIndicators = new Dictionary<string, bool>();

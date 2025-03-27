@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xbrl = Altova.RaptorXml.Xbrl;
+using Oim = Altova.RaptorXml.Oim;
 
 namespace XbrlTablesToExcel
 {
@@ -60,10 +61,48 @@ namespace XbrlTablesToExcel
         public Report(string url, Xbrl.Taxonomy.Dts dts=null)
         {
             Logger.Debug("Loading XBRL instance {0}", url);
-            ErrorLog errorLog;
-            var instance = Xbrl.Instance.CreateFromUrl(url, XbrlUtils.GetCreateInstanceOptions(dts), out errorLog);
+            ErrorLog errorLog = null;
+            Oim.OIM oim = null;
+
+            // Detect the document type of the XBRL instance (xBRL-XML, xBRL-JSON, xBRL-CSV)
+            string docType = Oim.OIM.DetectDocumentType(url);
+            switch (docType)
+            {
+                case "https://xbrl.org/2021/xbrl-csv":
+                    oim = Oim.OIM.CreateFromCSV(url, out errorLog);
+                    if (oim == null || errorLog.HasErrors)
+                        throw new ApplicationException(errorLog.ToString());
+                    break;
+                case "https://xbrl.org/2021/xbrl-json":
+                    oim = Oim.OIM.CreateFromJSON(url, out errorLog);
+                    if (oim == null || errorLog.HasErrors)
+                        throw new ApplicationException(errorLog.ToString());
+                    break;
+                case "https://xbrl.org/2021/xbrl-xml":
+                    // will be loaded later
+                    break;
+                default:
+                    throw new ApplicationException(String.Format("Unexpected document type: {0}", docType));
+            }
+
+            Xbrl.Instance instance = null;
+            if (oim != null)
+            {
+                // convert xBRL-CSV and xBRL-JSON reports to xBRL-XML
+                var xmlDoc = oim.ToXML(out errorLog);
+                if (errorLog.HasErrors)
+                    throw new ApplicationException(errorLog.ToString());
+
+                instance = Xbrl.Instance.CreateFromElement(xmlDoc.DocumentElement, out errorLog);
+            }
+            else
+            {
+                instance = Xbrl.Instance.CreateFromUrl(url, XbrlUtils.GetCreateInstanceOptions(dts), out errorLog);
+            }
+
             if (instance == null || errorLog.HasErrors)
                 throw new ApplicationException(errorLog.ToString());
+
             Init(instance);
         }
         public Report(Xbrl.Instance instance)
