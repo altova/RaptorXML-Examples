@@ -32,9 +32,7 @@ namespace OIMReportBuilderExample
         
         // Accuracy settings
         internal static int MonetaryDecimals = -3;
-        internal static int IntegerDecimals = 0;
         internal static int PercentageDecimals = 4;
-        internal static int DecimalsDecimals = 0;
 
         internal static Oim.ReportBuilder ReportBuilder;
         internal static Xbrl.Taxonomy.Dts EntryPointDts;
@@ -61,10 +59,8 @@ namespace OIMReportBuilderExample
             writer.WriteLine("refPeriod,{0}", ReferenceDate.ToString("yyyy-MM-dd"));
             writer.WriteLine("baseCurrency,{0}:{1}", "iso4217", BaseCurrency);
             writer.WriteLine("baseLanguage,{0}", "en");
-            writer.WriteLine("decimalsInteger,{0}", IntegerDecimals);
             writer.WriteLine("decimalsMonetary,{0}", MonetaryDecimals);
             writer.WriteLine("decimalsPercentage,{0}", PercentageDecimals);
-            writer.WriteLine("decimalsDecimal,{0}", DecimalsDecimals);
             writer.Close();
         }
 
