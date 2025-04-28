@@ -27,6 +27,9 @@ import altova_api.v2.xbrl.oim as oim
 output_folder = "C:\\temp\\OIMReportBuilderTest"
 output_folder_path = pathlib.Path(output_folder)
 
+# Name of the report pacakge and its top level directory
+report_package_name = "test"
+
 # Taxonomy entrypoint and respective metadata json to extend
 # make sure to install the specified taxonomy first using the Altova Taxonomy Manager
 entry_point_dts_url = "http://www.eba.europa.eu/eu/fr/xbrl/crr/fws/corep/4.0/mod/corep_lr.xsd"
@@ -47,9 +50,7 @@ base_language = "en"
 
 # Accuracy settings
 monetary_decimals = -3
-integer_decimals = 0
 percentage_decimals = 4
-decimal_decimals = 0
 
 report_builder = None
 entry_point_dts = None
@@ -65,30 +66,6 @@ report_json_content = """{{
 def write_report_json(report_json_path):
     with open(report_json_path, "w", encoding="utf-8") as f:
         f.write(report_json_content.format(base = extends_json_url))
-
-parameters_csv_content = """name,value
-entityID,{entity_identifier}
-refPeriod,{reference_date}
-baseCurrency,iso4217:{base_currency}
-baseLanguage,{base_language}
-decimalsInteger,{decimals_integer}
-decimalsMonetary,{decimals_monetary}
-decimalsPercentage,{decimals_percentage}
-decimalsDecimal,{decimals_decimal}
-"""
-# Creates parameters.csv in the output folder
-def write_parameters_csv(parameters_csv_path):
-    with open(parameters_csv_path, "w") as f:
-        f.write(parameters_csv_content.format(
-            entity_identifier = "%s:%s" %(entity_identifier.prefix, entity_identifier.local_name),
-            reference_date = reference_date.strftime("%Y-%m-%d"),
-            base_currency = base_currency,
-            base_language = base_language,
-            decimals_integer = integer_decimals,
-            decimals_monetary = monetary_decimals,
-            decimals_percentage = percentage_decimals,
-            decimals_decimal = decimal_decimals
-            ))
 
 # Returns a ConstraintSet with aspect values set for period and entity identifier
 def get_report_constraints():
@@ -138,7 +115,16 @@ def run_oim_report_builder_example():
     # write reports.json and parameters.csv
     report_json_path = output_folder_path / "report.json"
     write_report_json(report_json_path)
-    write_parameters_csv(output_folder_path / "parameters.csv")
+    report_parameters = {
+        "entityID": "%s:%s" %(entity_identifier.prefix, entity_identifier.local_name),
+        "refPeriod": reference_date.strftime("%Y-%m-%d"),
+        "baseCurrency": "iso4217:%s" %(base_currency),
+        "baseLanguage": "en",
+        "decimalsMonetary": str(monetary_decimals),
+        "decimalsPercentage": str(percentage_decimals),
+        "decimalsInteger": "0",
+        "decimalsDecimal": "0"
+    }
 
     report_builder = oim.ReportBuilder(entry_point_dts)
     report_builder.add_schemaRef(entry_point_dts_url)
@@ -148,11 +134,6 @@ def run_oim_report_builder_example():
         "table_elimination": False,
         "preserve_empty_aspect_nodes": False,
         "table_elimination_aspect_nodes": True
-    }
-    toCSVOptions = {
-        "use_existing_csv_metadata": True,
-        "oim_xbrl_namespace": "##detect",
-        "csv_table": tables_to_write
     }
 
     for table in entry_point_dts.find_tables("eba_tC_00.01"):
@@ -184,7 +165,28 @@ def run_oim_report_builder_example():
         break
 
     oimReport = report_builder.close_document()
+
+    toCSVOptions = {
+        "use_existing_csv_metadata": True,
+        "oim_xbrl_namespace": "##detect",
+        "csv_table": tables_to_write,
+        "oim_report_param": report_parameters
+    }
     oimReport.to_csv(str(report_json_path), **toCSVOptions)
+
+    # create report package
+    # The first parameter specifies the name of the top level directory. This must be the same as the file name of the report pacakge.
+    # The second parameter specifies the type of the report package. For xBRL-CSV reports Unconstrained and NonInlineXBRL are valid values.
+    reportPackageBuilder = xbrl.ReportPackageBuilder(report_package_name, xbrl.ReportPackageType.NonInlineXBRL)
+    reportPackageBuilder.add_file_from_url("reports/report.json", str(report_json_path))
+    reportPackageBuilder.add_file_from_url("reports/parameters.csv", str(output_folder_path / "parameters.csv"))
+    reportPackageBuilder.add_file_from_url("reports/FilingIndicators.csv", str(output_folder_path / "FilingIndicators.csv"))
+    for table in tables_to_write:
+        reportPackageBuilder.add_file_from_url("reports/%s" % (table), str(output_folder_path / table))
+
+    reportPackage, log = reportPackageBuilder.finalize(str(output_folder_path / ("%s.xbr" % (report_package_name))))
+    if log.has_errors():
+        raise Exception(str(log))
 
 
 if __name__ == '__main__':
