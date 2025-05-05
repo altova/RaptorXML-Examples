@@ -183,7 +183,7 @@ namespace XbrlTablesToExcel
                     nMin = i;
                 }
             }
-            ws.Columns(xOffset + nMin + 1, xOffset + shapeY).Width = arrVerticalTextCol[nMin] ? 2 : 21;
+            ws.Columns(xOffset + nMin + 1, xOffset + shapeY).Width = nMin < arrVerticalTextCol.Length && arrVerticalTextCol[nMin] ? 2 : 21;
             ws.Column(xOffset + shapeY + 1).Width = 5;
 
             for (int y = 0; y < shapeX; ++y)

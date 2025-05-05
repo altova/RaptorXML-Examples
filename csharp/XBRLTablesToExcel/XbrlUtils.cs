@@ -4,6 +4,7 @@ using System.Linq;
 using Xml = Altova.RaptorXml.Xml;
 using Xsd = Altova.RaptorXml.Xsd;
 using Xbrl = Altova.RaptorXml.Xbrl;
+using Altova.RaptorXml.Xbrl.Taxonomy;
 
 namespace XbrlTablesToExcel
 {
@@ -46,53 +47,84 @@ namespace XbrlTablesToExcel
         }
         internal static string GetLabel(Xbrl.Table.Layout.AxisHeader header, bool bFallbackToId = true)
         {
-            var labels = header.DefinitionNode.GetLabels("http://www.xbrl.org/2008/role/label", null, null);
-            if (labels.Count == 0)
-                labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.xbrl.org/2008/role/label", null, null);
-            return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null);
+            if (header != null)
+            {
+                var labels = header.DefinitionNode.GetLabels("http://www.xbrl.org/2008/role/label", null, null);
+                if (labels.Count == 0)
+                    labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.xbrl.org/2008/role/label", null, null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null);
+            }
+            return null;
         }
         internal static string GetLabel(Xbrl.Taxonomy.Concept concept, bool bFallbackToQName = true)
         {
-            var labels = concept.GetLabels("http://www.xbrl.org/2003/role/label", null, null);
-            return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null);
+            if (concept != null)
+            {
+                var labels = concept.GetLabels("http://www.xbrl.org/2003/role/label", null, null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null);
+            }
+            return null;
         }
         internal static string GetLabel(Xbrl.Taxonomy.Resource resource, bool bFallbackToId = true)
         {
-            var labels = resource.GetLabels("http://www.xbrl.org/2008/role/label", null, null);
-            return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? resource.Id : null);
+            if (resource != null)
+            {
+                var labels = resource.GetLabels("http://www.xbrl.org/2008/role/label", null, null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? resource.Id : null);
+            }
+            return null;
         }
         internal static string GetVerboseLabel(Xbrl.Table.Layout.AxisHeader header, bool bFallbackToId = true)
         {
-            var labels = header.DefinitionNode.GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
-            if (labels.Count == 0)
-                labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
-            return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null);
+            if (header != null)
+            {
+                var labels = header.DefinitionNode.GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
+                if (labels.Count == 0)
+                    labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null);
+            }
+            return null;
         }
         internal static string GetVerboseLabel(Xbrl.Taxonomy.Concept concept, bool bFallbackToQName = true)
         {
-            var labels = concept.GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
-            return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null);
+            if (concept != null)
+            {
+                var labels = concept.GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null);
+            }
+            return null;
         }
         internal static string GetVerboseLabel(Xbrl.Taxonomy.Resource resource, bool bFallbackToLabel = true)
         {
-            var labels = resource.GetLabels("http://www.xbrl.org/2008/role/verboseLabel", null, null);
-            return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToLabel ? GetLabel(resource, true) : null);
+            if (resource != null)
+            {
+                var labels = resource.GetLabels("http://www.xbrl.org/2008/role/verboseLabel", null, null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToLabel ? GetLabel(resource, true) : null);
+            }
+            return null;
         }
         internal static string GetRCCode(Xbrl.Table.Layout.AxisHeader header)
         {
-            var labels = header.DefinitionNode.GetLabels("http://www.eurofiling.info/xbrl/role/rc-code", null, null);
-            if (labels.Count == 0)
-                labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.eurofiling.info/xbrl/role/rc-code", null, null);
-            if (labels.Count > 0)
-                return labels.First().Text;
+            if (header != null)
+            {
+                var labels = header.DefinitionNode.GetLabels("http://www.eurofiling.info/xbrl/role/rc-code", null, null);
+                if (labels.Count == 0)
+                    labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.eurofiling.info/xbrl/role/rc-code", null, null);
+                if (labels.Count > 0)
+                    return labels.First().Text;
+            }
             return null;
         }
         internal static string GetRCCode(Xbrl.Taxonomy.Resource resource)
         {
-            var labels = resource.GetLabels("http://www.eurofiling.info/xbrl/role/rc-code", null, null);
-            if (labels.Count == 0)
-                return null;
-            return labels.First().Text;
+            if (resource != null)
+            {
+                var labels = resource.GetLabels("http://www.eurofiling.info/xbrl/role/rc-code", null, null);
+                if (labels.Count == 0)
+                    return null;
+                return labels.First().Text;
+            }
+            return null;
         }
 
         internal static Xbrl.Table.Breakdown GetOpenAspectDefinitionBreakdown(Table table, Xbrl.Table.AspectNode openAspectNode)
@@ -240,7 +272,7 @@ namespace XbrlTablesToExcel
         {
             var options = new Xbrl.Table.TableLayoutSettings();
             options.TableElimination = false;
-            options.PreserveEmptyAspectNodes = true;
+            options.PreserveEmptyAspectNodes = false;
             options.TableEliminationAspectNodes = true;
 
             return options;
