@@ -13,20 +13,20 @@ namespace XbrlTablesToExcel
         internal static string LabelLanguage = "en";
         internal static string FilingIndicatorsNamespace = "http://www.eurofiling.info/xbrl/ext/filing-indicators";
 
-        internal static string GetLabel(object item, bool bFallbackToIdOrName = true)
+        internal static string GetLabel(object item, bool bFallbackToIdOrName = true, params string[] avoidLabels)
         {
             if (item is Xbrl.Table.Layout.AxisHeader)
-                return GetLabel(item as Xbrl.Table.Layout.AxisHeader, bFallbackToIdOrName);
+                return GetLabel(item as Xbrl.Table.Layout.AxisHeader, bFallbackToIdOrName, avoidLabels);
             else if (item is Xbrl.Taxonomy.Concept)
-                return GetLabel(item as Xbrl.Taxonomy.Concept, bFallbackToIdOrName);
+                return GetLabel(item as Xbrl.Taxonomy.Concept, bFallbackToIdOrName, avoidLabels);
             else if (item is Xbrl.Taxonomy.Resource)
-                return GetLabel(item as Xbrl.Taxonomy.Resource, bFallbackToIdOrName);
+                return GetLabel(item as Xbrl.Taxonomy.Resource, bFallbackToIdOrName, avoidLabels);
             else if (item is Xml.ElementInformationItem)
                 return (item as Xml.ElementInformationItem).QName.ToString();
             else
                 return null;
         }
-        internal static string GetLabelWithLanguage(Xbrl.Taxonomy.LabelCollection labels, string lang, string fallbackValue)
+        internal static string GetLabelWithLanguage(Xbrl.Taxonomy.LabelCollection labels, string lang, string fallbackValue, params string[] avoidLabels )
         {
             Xbrl.Taxonomy.Label result = null;
             string lowerCaseLang = lang.ToLowerInvariant();
@@ -36,7 +36,8 @@ namespace XbrlTablesToExcel
                 if (lowerCaseLabelLang == lowerCaseLang)
                 {
                     result = label;
-                    break;
+                    if (!avoidLabels.Contains(label.Text, StringComparer.OrdinalIgnoreCase))
+                        break;
                 }
                 if (lowerCaseLabelLang == "en")
                     result = label; // fallback to english
@@ -45,61 +46,61 @@ namespace XbrlTablesToExcel
             }
             return result == null ? fallbackValue : result.Text; // fallback to fallbackvalue if no label is found at all
         }
-        internal static string GetLabel(Xbrl.Table.Layout.AxisHeader header, bool bFallbackToId = true)
+        internal static string GetLabel(Xbrl.Table.Layout.AxisHeader header, bool bFallbackToId = true, params string[] avoidLabels )
         {
             if (header != null)
             {
                 var labels = header.DefinitionNode.GetLabels("http://www.xbrl.org/2008/role/label", null, null);
                 if (labels.Count == 0)
                     labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.xbrl.org/2008/role/label", null, null);
-                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null, avoidLabels);
             }
             return null;
         }
-        internal static string GetLabel(Xbrl.Taxonomy.Concept concept, bool bFallbackToQName = true)
+        internal static string GetLabel(Xbrl.Taxonomy.Concept concept, bool bFallbackToQName = true, params string[] avoidLabels )
         {
             if (concept != null)
             {
                 var labels = concept.GetLabels("http://www.xbrl.org/2003/role/label", null, null);
-                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null, avoidLabels);
             }
             return null;
         }
-        internal static string GetLabel(Xbrl.Taxonomy.Resource resource, bool bFallbackToId = true)
+        internal static string GetLabel(Xbrl.Taxonomy.Resource resource, bool bFallbackToId = true, params string[] avoidLabels )
         {
             if (resource != null)
             {
                 var labels = resource.GetLabels("http://www.xbrl.org/2008/role/label", null, null);
-                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? resource.Id : null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? resource.Id : null, avoidLabels);
             }
             return null;
         }
-        internal static string GetVerboseLabel(Xbrl.Table.Layout.AxisHeader header, bool bFallbackToId = true)
+        internal static string GetVerboseLabel(Xbrl.Table.Layout.AxisHeader header, bool bFallbackToId = true, params string[] avoidLabels)
         {
             if (header != null)
             {
                 var labels = header.DefinitionNode.GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
                 if (labels.Count == 0)
                     labels = header.Axis.GetDefinitionBreakdown(header.Row).GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
-                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToId ? header.DefinitionNode.Id : null, avoidLabels);
             }
             return null;
         }
-        internal static string GetVerboseLabel(Xbrl.Taxonomy.Concept concept, bool bFallbackToQName = true)
+        internal static string GetVerboseLabel(Xbrl.Taxonomy.Concept concept, bool bFallbackToQName = true, params string[] avoidLabels)
         {
             if (concept != null)
             {
                 var labels = concept.GetLabels("http://www.xbrl.org/2003/role/verboseLabel", null, null);
-                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToQName ? concept.QName.ToString() : null, avoidLabels);
             }
             return null;
         }
-        internal static string GetVerboseLabel(Xbrl.Taxonomy.Resource resource, bool bFallbackToLabel = true)
+        internal static string GetVerboseLabel(Xbrl.Taxonomy.Resource resource, bool bFallbackToLabel = true, params string[] avoidLabels)
         {
             if (resource != null)
             {
                 var labels = resource.GetLabels("http://www.xbrl.org/2008/role/verboseLabel", null, null);
-                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToLabel ? GetLabel(resource, true) : null);
+                return GetLabelWithLanguage(labels, LabelLanguage, bFallbackToLabel ? GetLabel(resource, true, avoidLabels) : null, avoidLabels);
             }
             return null;
         }
@@ -163,7 +164,7 @@ namespace XbrlTablesToExcel
                 // Use breakdown label if the aspect node is the only child                
                 var breakdown = axis.GetDefinitionBreakdown((uint)row);
                 if (breakdown != null && breakdown.TreeRelationships.Count == 1)
-                    openAspectLabel = GetLabel(breakdown, false);
+                    openAspectLabel = GetLabel(breakdown, false, "rows", "columns"); // avoid a generic "rows" or "columns" as label
             }
             if (openAspectLabel == null)
             {
@@ -185,7 +186,7 @@ namespace XbrlTablesToExcel
                 // Use breakdown label if the aspect node is the only child                
                 var breakdown = GetOpenAspectDefinitionBreakdown(table, openAspectNode);
                 if (breakdown != null && breakdown.TreeRelationships.Count == 1)
-                    openAspectLabel = GetLabel(breakdown, false);
+                    openAspectLabel = GetLabel(breakdown, false, "rows", "columns" ); // avoid a generic "rows" or "columns" as label
             }
             if (openAspectLabel == null)
             {
@@ -271,7 +272,7 @@ namespace XbrlTablesToExcel
         internal static Xbrl.Table.TableLayoutSettings GetTableLayoutOptions()
         {
             var options = new Xbrl.Table.TableLayoutSettings();
-            options.TableElimination = false;
+            options.TableElimination = true;
             options.PreserveEmptyAspectNodes = false;
             options.TableEliminationAspectNodes = true;
 

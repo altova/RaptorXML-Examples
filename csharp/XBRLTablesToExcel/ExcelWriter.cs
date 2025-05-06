@@ -524,7 +524,7 @@ namespace XbrlTablesToExcel
                 cell = ws.Cell(yOffset + 1, xOffset + tableTreeLine.Depth + 1);
                 Style.ApplyTOCFormat(cell.AsRange(), tableTreeLine.Depth, tableTreeLine.IsTable, tableTreeLine.IsReported).Value = tableTreeLine.Title;
 
-                if (tableTreeLine.IsReported)
+                if (tableTreeLine.IsReported && tableTreeLine.Table.LayoutTable.ContainsFacts)
                 {
                     var sheetName = CreateSheetName(tableTreeLine.Table, worksheetNames);
                     var wsTable = wb.AddWorksheet(sheetName);
