@@ -272,7 +272,7 @@ namespace XbrlTablesToExcel
         internal static Xbrl.Table.TableLayoutSettings GetTableLayoutOptions()
         {
             var options = new Xbrl.Table.TableLayoutSettings();
-            options.TableElimination = true;
+            options.TableElimination = false;
             options.PreserveEmptyAspectNodes = false;
             options.TableEliminationAspectNodes = true;
 
