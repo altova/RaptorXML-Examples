@@ -63,18 +63,56 @@ namespace XbrlTablesToExcel
             Logger.Debug("Loading XBRL instance {0}", url);
             ErrorLog errorLog = null;
             Oim.OIM oim = null;
+            string reportURL = url;
+            string docType = null;
 
-            // Detect the document type of the XBRL instance (xBRL-XML, xBRL-JSON, xBRL-CSV)
-            string docType = Oim.OIM.DetectDocumentType(url);
+            // Detect report package type
+            var pkgType = Xbrl.ReportPackage.GetReportPackageTypeFromFileExtension(url);
+            switch (pkgType)
+            {
+                case Xbrl.ReportPackageType.NonInlineXBRL:
+                case Xbrl.ReportPackageType.Unconstrained:
+                    // Load the report package
+                    var reportPkg = Xbrl.ReportPackage.CreateFromUrl(url, out errorLog);
+                    if (reportPkg == null || errorLog.HasErrors)
+                        throw new ApplicationException(errorLog.ToString());
+                    if (reportPkg.ReportInfos.Count != 1)
+                        throw new ApplicationException("Only report packages with exactly one report are supported!");
+                    var reportInfo = reportPkg.ReportInfos.First();
+                    switch (reportInfo.ReportType)
+                    {
+                        case Xbrl.ReportType.XBRL:
+                            reportURL = reportInfo.DocumentUrls[0];
+                            docType = "https://xbrl.org/2021/xbrl-xml";
+                            break;
+                        case Xbrl.ReportType.JSON:
+                            reportURL = reportInfo.DocumentUrls[0];
+                            docType = reportInfo.JsonDocumentType;
+                            break;
+                        case Xbrl.ReportType.InlineXBRL:
+                            throw new ApplicationException("Inline XBRL report packages are not supported!");
+                        default:
+                            throw new ApplicationException("Unexpected report type!");
+                    }
+                    break;
+                case Xbrl.ReportPackageType.InlineXBRL:
+                    throw new ApplicationException("Inline XBRL report packages are not supported!");
+                case Xbrl.ReportPackageType.None:
+                default:
+                    // No report package => Detect the document type of the XBRL instance (xBRL-XML, xBRL-JSON, xBRL-CSV)
+                    docType = Oim.OIM.DetectDocumentType(reportURL);
+                    break;
+            }
+
             switch (docType)
             {
                 case "https://xbrl.org/2021/xbrl-csv":
-                    oim = Oim.OIM.CreateFromCSV(url, out errorLog);
+                    oim = Oim.OIM.CreateFromCSV(reportURL, out errorLog);
                     if (oim == null || errorLog.HasErrors)
                         throw new ApplicationException(errorLog.ToString());
                     break;
                 case "https://xbrl.org/2021/xbrl-json":
-                    oim = Oim.OIM.CreateFromJSON(url, out errorLog);
+                    oim = Oim.OIM.CreateFromJSON(reportURL, out errorLog);
                     if (oim == null || errorLog.HasErrors)
                         throw new ApplicationException(errorLog.ToString());
                     break;
@@ -97,7 +135,7 @@ namespace XbrlTablesToExcel
             }
             else
             {
-                instance = Xbrl.Instance.CreateFromUrl(url, XbrlUtils.GetCreateInstanceOptions(dts), out errorLog);
+                instance = Xbrl.Instance.CreateFromUrl(reportURL, XbrlUtils.GetCreateInstanceOptions(dts), out errorLog);
             }
 
             if (instance == null || errorLog.HasErrors)
