@@ -166,22 +166,13 @@ namespace XbrlTablesToExcel
 
             foreach (var context in this.Instance.Contexts)
             {
-                if (context.Period.IsInstant && context.DimensionAspectValues.Count == 0)
-                {
+                var isInstant = context.Period.IsInstant;
+                var hasDimensions = context.DimensionAspectValues.Count != 0;
+                if (this.ReportingContext == null || (isInstant && !hasDimensions))
                     this.ReportingContext = context;
+
+                if (isInstant && !hasDimensions)
                     break;
-                }
-            }
-            if (this.ReportingContext == null)
-            {
-                foreach (var context in this.Instance.Contexts)
-                {
-                    if (context.DimensionAspectValues.Count == 0)
-                    {
-                        this.ReportingContext = context;
-                        break;
-                    }
-                }
             }
 
             if (this.Instance.Units.Count > 0)
